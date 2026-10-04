@@ -5,14 +5,15 @@ import com.unciv.models.ruleset.Ruleset
 import com.unciv.models.ruleset.IConstruction  // Kdoc only
 import yairm210.purity.annotations.InternalState
 import yairm210.purity.annotations.LocalState
-import yairm210.purity.annotations.ModifiesInternalStateOnly
+import yairm210.purity.annotations.InternalStateAccess
+import yairm210.purity.annotations.InternalStateMutation
 import yairm210.purity.annotations.Readonly
 
 /** Container helps aggregating supply and demand of [resources][ResourceSupply.resource], categorized by [origin][ResourceSupply.origin].
  *
  *  @param keepZeroAmounts If `false`, entries with [amount][ResourceSupply.amount] 0 are eliminated
  */
-@ModifiesInternalStateOnly
+@InternalStateMutation
 class ResourceSupplyList(
     private val keepZeroAmounts: Boolean = false
 ) : ArrayList<ResourceSupplyList.ResourceSupply>(24) {

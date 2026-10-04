@@ -11,7 +11,7 @@ import yairm210.purity.annotations.*
  *
  * Use [sum], [min], [max] for fast aggregates.
  */
-@ModifiesInternalStateOnly
+@InternalStateMutation
 open class Stats(
     var production: Float = 0f,
     var food: Float = 0f,
@@ -287,11 +287,10 @@ open class Stats(
     }
 }
 
-@ModifiesInternalStateOnly
 class StatMap : LinkedHashMap<String,Stats>() {
     fun add(source: String, stats: Stats) {
         // We always clone to avoid touching the mutable stats of uniques
-        if (!containsKey(source)) put(source, stats.clone())
+        if (!containsKey(source)) put(source, @Suppress("purity") stats.clone())
         else {
             @LocalState val existingStats = get(source)!! 
             existingStats.add(stats)

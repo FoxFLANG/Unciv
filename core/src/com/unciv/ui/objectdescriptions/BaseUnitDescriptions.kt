@@ -203,7 +203,7 @@ object BaseUnitDescriptions {
     }
 
     fun UnitType.getUnitTypeCivilopediaTextLines(ruleset: Ruleset) = buildCivilopediaText {
-        @Readonly
+        @Readonly @Suppress("purity")
         fun getDomainLines()  {
             add("{Unit types}:", header = 4)
             val myMovementType = getMovementType()

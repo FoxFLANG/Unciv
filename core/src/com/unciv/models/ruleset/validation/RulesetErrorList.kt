@@ -6,8 +6,6 @@ import com.unciv.models.ruleset.unique.IHasUniques
 import com.unciv.models.ruleset.unique.GameContext
 import com.unciv.models.ruleset.unique.Unique
 import com.unciv.models.ruleset.unique.UniqueType
-import yairm210.purity.annotations.InternalState
-import yairm210.purity.annotations.ModifiesInternalStateOnly
 import yairm210.purity.annotations.Pure
 import yairm210.purity.annotations.Readonly
 
@@ -33,7 +31,6 @@ enum class RulesetErrorSeverity(val color: Color, val iconName: String) {
  *
  *  @param ruleset The ruleset being validated (needed to check modOptions for suppression uniques). Leave `null` only for validation results that need no suppression checks.
  */
-@ModifiesInternalStateOnly
 class RulesetErrorList(
     ruleset: Ruleset? = null
 ) : ArrayList<RulesetError>() {

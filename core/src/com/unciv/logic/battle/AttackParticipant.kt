@@ -4,7 +4,7 @@ import com.unciv.logic.IsPartOfGameInfoSerialization
 import com.unciv.logic.map.HexCoord
 import yairm210.purity.annotations.InternalState
 import yairm210.purity.annotations.LocalState
-import yairm210.purity.annotations.ModifiesInternalStateOnly
+import yairm210.purity.annotations.InternalStateAccess
 import yairm210.purity.annotations.Readonly
 
 enum class AttackParticipantOutcome {
@@ -12,7 +12,7 @@ enum class AttackParticipantOutcome {
 }
 
 /** A participant's identity at attack time, independent of later movement, renaming or capture. */
-@ModifiesInternalStateOnly
+@InternalStateAccess
 class AttackParticipant() : IsPartOfGameInfoSerialization {
     var unitID: Int? = null
     var civID = ""

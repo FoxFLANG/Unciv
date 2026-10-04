@@ -3,9 +3,10 @@ package com.unciv.logic.trade
 import com.unciv.logic.IsPartOfGameInfoSerialization
 import yairm210.purity.annotations.InternalState
 import yairm210.purity.annotations.LocalState
-import yairm210.purity.annotations.ModifiesInternalStateOnly
+import yairm210.purity.annotations.InternalStateAccess
+import yairm210.purity.annotations.InternalStateMutation
 
-@ModifiesInternalStateOnly
+@InternalStateMutation
 class TradeOffersList: ArrayList<TradeOffer>(), IsPartOfGameInfoSerialization {
     override fun add(element: TradeOffer): Boolean {
         @LocalState val equivalentOffer = firstOrNull { it.name == element.name && it.type == element.type }

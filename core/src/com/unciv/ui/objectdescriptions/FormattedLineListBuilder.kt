@@ -7,8 +7,8 @@ import com.unciv.models.ruleset.unique.UniqueType
 import com.unciv.ui.screens.civilopediascreen.FormattedLine
 import com.unciv.ui.screens.civilopediascreen.ICivilopediaText
 import yairm210.purity.annotations.Cache
-import yairm210.purity.annotations.InternalState
-import yairm210.purity.annotations.ModifiesInternalStateOnly
+import yairm210.purity.annotations.InternalStateMutation
+import yairm210.purity.annotations.Mutated
 import yairm210.purity.annotations.Readonly
 
 /** A builder for use in [ICivilopediaText.getCivilopediaTextLines].
@@ -47,14 +47,14 @@ interface FormattedLineListBuilder {
      */
     enum class SeparatorType {
         None {
-            override fun addTo(to: FormattedLineListBuilder, size: Int, color: String) {}
+            override fun addTo(@Mutated to: FormattedLineListBuilder, size: Int, color: String) {}
         }, Space {
-            override fun addTo(to: FormattedLineListBuilder, size: Int, color: String) { to.space() }
+            override fun addTo(@Mutated to: FormattedLineListBuilder, size: Int, color: String) { to.space() }
         }, Line {
-            override fun addTo(to: FormattedLineListBuilder, size: Int, color: String) { to.separator(size, color) }
+            override fun addTo(@Mutated to: FormattedLineListBuilder, size: Int, color: String) { to.separator(size, color) }
         };
         @Readonly
-        internal abstract fun addTo(to: FormattedLineListBuilder, size: Int, color: String)
+        internal abstract fun addTo(@Mutated to: FormattedLineListBuilder, size: Int, color: String)
     }
 
     /** Called automatically, not part of the client API */
@@ -62,7 +62,6 @@ interface FormattedLineListBuilder {
     fun build(): List<FormattedLine>
 
     /** Flexible line addition, allows all parameters the [FormattedLine] constructor does, but defaults each to the template set in [defaults]. */
-    @Readonly
     fun add(
         text: String = defaults().text,
         link: String = defaults().link,
@@ -81,42 +80,33 @@ interface FormattedLineListBuilder {
     )
 
     /** Add a complete [FormattedLine], ignoring [defaults]. */
-    @Readonly
     fun add(line: FormattedLine)
 
     /** Add a line for a [Unique], ignoring [defaults] except for [indent].
      *
      *  See also: The [FormattedLine]`(Unique)` constructor for features like supporting automatic links for ruleset objects mentioned in Unique parameters.
      */
-    @Readonly
     fun add(unique: Unique, indent: Int = defaults().indent)
 
     /** Add an image, see [FormattedLine.extraImage]. */
-    @Readonly
     fun add(extraImage: String, imageSize: Float)
 
     /** Add several lines, ignoring [defaults]. */
-    @Readonly
     fun add(newLines: Iterable<FormattedLine>)
 
     /** Add several lines, ignoring [defaults]. */
-    @Readonly
     fun add(newLines: Sequence<FormattedLine>)
 
     /** Add several lines, ignoring [defaults]. Each is built from one input element, transformed by [transform]. */
-    @Readonly
     fun <T> add(input: Iterable<T>, transform: T.() -> FormattedLine)
 
     /** Add a vertical separator of type [separator]. [size] (line thickness) and [color] are used for type [SeparatorType.Line]. */
-    @Readonly
     fun add(separator: SeparatorType, size: Int = defaults().size, color: String = defaults().color)
 
     /** Add a vertical space half the height of a normal line. */
-    @Readonly
     fun space()
 
     /** Add a horizontal line separator. [size] is the line thickness. */
-    @Readonly
     fun separator(size: Int = defaults().size, color: String = defaults().color)
 
     /** Add lines for the Uniques of [source], ignoring [defaults].
@@ -126,7 +116,6 @@ interface FormattedLineListBuilder {
      *  @param colorConsumesResources If set, ConsumesResources Uniques get a reddish color.
      *  @param exclude Predicate that can exclude Uniques by returning `true` (defaults to return `false`).
      */
-    @Readonly
     context(source: IHasUniques)
     fun addUniques(
         leadingSeparator: SeparatorType = SeparatorType.Space,
@@ -139,26 +128,22 @@ interface FormattedLineListBuilder {
      *  TODO: Interim. A later stage of the builder conversion will probably get a more flexible helper
      *        covering other content and formatting a 1-entry list as single line (several usecases)
      */
-    @Readonly
     fun addSeeAlso(seeAlso: Sequence<IRulesetObject>)
 
     /** Change the template default values are drawn from */
-    @Readonly
     fun defaults(line: FormattedLine)
     /** Retrieve the template default values are drawn from */
     @Readonly
     fun defaults(): FormattedLine
 }
 
-@ModifiesInternalStateOnly
+@InternalStateMutation
 private class FormattedLineListBuilderImpl(
     defaults: FormattedLine,
     capacity: Int
 ) : FormattedLineListBuilder {
-    @Cache
     private val lines = ArrayList<FormattedLine>(capacity)
 
-    @Cache
     private var defaultsLine = defaults
 
     override fun build() = lines

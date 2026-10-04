@@ -49,7 +49,7 @@ class Difficulty : RulesetObject() {
 
     override fun getSortGroup(ruleset: Ruleset) = ruleset.difficulties.keys.indexOf(name)
 
-    @Readonly
+    @Readonly @Suppress("purity")
     override fun getCivilopediaTextLines(ruleset: Ruleset) = buildCivilopediaText(defaults = FormattedLine(indent = 1)) {
         fun Float.toPercent() = (this * 100).toInt()
 
